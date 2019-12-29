@@ -1,0 +1,84 @@
+@base_url=http://localhost:1337
+@authorization = Bearer {{jwt.response.body.jwt}}
+
+###
+
+
+GET {{base_url}}/drones
+Content-Type: application/json
+Accept: application/json
+Authorization: {{authorization}}
+
+###
+
+POST {{base_url}}/drones
+Content-Type: application/json
+Accept: application/json
+Authorization: {{authorization}}
+
+
+{
+    "name":"eachine falcon 250",
+    "description": "3s / 4s 2306 props 3x5045 2x5045"
+}
+
+
+### register
+# @name jwt
+
+POST {{base_url}}/auth/local/register
+Content-Type: application/json
+Accept: application/json
+
+{
+    "username": "Garn2",
+    "email": "juanperezgarnica+1@gmail.com",
+    "password": "Abcd12345678!"
+}
+
+###
+# @name jwt
+
+POST {{base_url}}/auth/local
+Accept: application/json
+Content-Type: application/json
+
+{
+    "identifier":"juanperezgarnica+1@gmail.com",
+    "password": "Abcd12345678!"
+}
+###
+
+POST {{base_url}}/graphql
+Content-Type: application/json
+Authorization: {{authorization}}
+X-REQUEST-TYPE: GraphQL
+
+query {
+    drones {
+        id
+        description
+        name
+    }
+}
+
+###
+
+POST {{base_url}}/graphql
+Content-Type: application/json
+Authorization: {{authorization}}
+X-REQUEST-TYPE: GraphQL
+
+query ($name: String!, $description: String!) {
+  createDrone(data: {
+
+  }) {
+    name
+    description
+  }
+}
+
+{
+    "name": "vscode-restclient",
+    "description": "Huachao"
+}

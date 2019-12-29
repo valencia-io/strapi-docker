@@ -1,0 +1,34 @@
+{
+  "connection": "default",
+  "collectionName": "drones",
+  "info": {
+    "name": "drone"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "name": {
+      "type": "string",
+      "required": true,
+      "unique": true
+    },
+    "description": {
+      "type": "text"
+    },
+    "frame": {
+      "type": "string"
+    },
+    "pictures": {
+      "collection": "file",
+      "via": "related",
+      "plugin": "upload",
+      "required": false
+    },
+    "brand": {
+      "type": "string",
+      "default": "custom"
+    }
+  }
+}

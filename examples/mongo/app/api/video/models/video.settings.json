@@ -1,0 +1,28 @@
+{
+  "connection": "default",
+  "collectionName": "videos",
+  "info": {
+    "name": "video"
+  },
+  "options": {
+    "increments": true,
+    "timestamps": true
+  },
+  "attributes": {
+    "description": {
+      "type": "string"
+    },
+    "videos": {
+      "collection": "file",
+      "via": "related",
+      "plugin": "upload",
+      "required": false
+    },
+    "url": {
+      "type": "string"
+    },
+    "location": {
+      "type": "string"
+    }
+  }
+}
