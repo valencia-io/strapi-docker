@@ -29,6 +29,15 @@
     "brand": {
       "type": "string",
       "default": "custom"
+    },
+    "weigth_grams": {
+      "default": 0,
+      "type": "integer"
+    },
+    "videos": {
+      "collection": "video",
+      "via": "drone",
+      "dominant": true
     }
   }
 }

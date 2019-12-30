@@ -97,7 +97,9 @@ type Drone {
   description: String
   frame: String
   brand: String
+  weigth_grams: Int
   pictures(sort: String, limit: Int, start: Int, where: JSON): [UploadFile]
+  videos(sort: String, limit: Int, start: Int, where: JSON): [Video]
   _id: ID!
   id: ID!
   createdAt: DateTime!
@@ -107,6 +109,26 @@ type Drone {
 type DroneAggregator {
   count: Int
   totalCount: Int
+  sum: DroneAggregatorSum
+  avg: DroneAggregatorAvg
+  min: DroneAggregatorMin
+  max: DroneAggregatorMax
+}
+
+type DroneAggregatorAvg {
+  weigth_grams: Float
+}
+
+type DroneAggregatorMax {
+  weigth_grams: Float
+}
+
+type DroneAggregatorMin {
+  weigth_grams: Float
+}
+
+type DroneAggregatorSum {
+  weigth_grams: Float
 }
 
 type DroneConnection {
@@ -155,11 +177,17 @@ type DroneConnectionUpdatedAt {
   connection: DroneConnection
 }
 
+type DroneConnectionWeigth_grams {
+  key: Int
+  connection: DroneConnection
+}
+
 type DroneGroupBy {
   name: [DroneConnectionName]
   description: [DroneConnectionDescription]
   frame: [DroneConnectionFrame]
   brand: [DroneConnectionBrand]
+  weigth_grams: [DroneConnectionWeigth_grams]
   _id: [DroneConnection_id]
   id: [DroneConnectionId]
   createdAt: [DroneConnectionCreatedAt]
@@ -172,6 +200,8 @@ input DroneInput {
   frame: String
   pictures: [ID]
   brand: String
+  weigth_grams: Int
+  videos: [ID]
 }
 
 input editDroneInput {
@@ -180,6 +210,8 @@ input editDroneInput {
   frame: String
   pictures: [ID]
   brand: String
+  weigth_grams: Int
+  videos: [ID]
 }
 
 input editFileInput {
@@ -226,6 +258,7 @@ input editVideoInput {
   videos: [ID]
   url: String
   location: String
+  drone: [ID]
 }
 
 input FileInput {
@@ -253,7 +286,7 @@ scalar JSON
 """The `Long` scalar type represents 52-bit integers"""
 scalar Long
 
-union Morph = UsersPermissionsMe | UsersPermissionsMeRole | UsersPermissionsLoginPayload | Drone | createDronePayload | updateDronePayload | deleteDronePayload | DroneConnection | DroneAggregator | DroneGroupBy | DroneConnectionName | DroneConnectionDescription | DroneConnectionFrame | DroneConnectionBrand | DroneConnection_id | DroneConnectionId | DroneConnectionCreatedAt | DroneConnectionUpdatedAt | Motor | createMotorPayload | updateMotorPayload | deleteMotorPayload | MotorConnection | MotorAggregator | MotorGroupBy | MotorConnectionBrand | MotorConnectionModel | MotorConnectionSize | MotorConnectionDescription | MotorConnection_id | MotorConnectionId | MotorConnectionCreatedAt | MotorConnectionUpdatedAt | Video | createVideoPayload | updateVideoPayload | deleteVideoPayload | VideoConnection | VideoAggregator | VideoGroupBy | VideoConnectionDescription | VideoConnectionUrl | VideoConnectionLocation | VideoConnection_id | VideoConnectionId | VideoConnectionCreatedAt | VideoConnectionUpdatedAt | UploadFile | UploadFileConnection | UploadFileAggregator | UploadFileGroupBy | UploadFileConnectionName | UploadFileConnectionHash | UploadFileConnectionSha256 | UploadFileConnectionExt | UploadFileConnectionMime | UploadFileConnectionSize | UploadFileConnectionUrl | UploadFileConnectionProvider | UploadFileConnectionProvider_metadata | UploadFileConnection_id | UploadFileConnectionId | UploadFileConnectionCreatedAt | UploadFileConnectionUpdatedAt | UsersPermissionsPermission | UsersPermissionsRole | createRolePayload | updateRolePayload | deleteRolePayload | UsersPermissionsRoleConnection | UsersPermissionsRoleAggregator | UsersPermissionsRoleGroupBy | UsersPermissionsRoleConnectionName | UsersPermissionsRoleConnectionDescription | UsersPermissionsRoleConnectionType | UsersPermissionsRoleConnection_id | UsersPermissionsRoleConnectionId | UsersPermissionsRoleConnectionCreatedAt | UsersPermissionsRoleConnectionUpdatedAt | UsersPermissionsUser | createUserPayload | updateUserPayload | deleteUserPayload | UsersPermissionsUserConnection | UsersPermissionsUserAggregator | UsersPermissionsUserGroupBy | UsersPermissionsUserConnectionUsername | UsersPermissionsUserConnectionEmail | UsersPermissionsUserConnectionProvider | UsersPermissionsUserConnectionConfirmed | UsersPermissionsUserConnectionBlocked | UsersPermissionsUserConnectionRole | UsersPermissionsUserConnection_id | UsersPermissionsUserConnectionId | UsersPermissionsUserConnectionCreatedAt | UsersPermissionsUserConnectionUpdatedAt
+union Morph = UsersPermissionsMe | UsersPermissionsMeRole | UsersPermissionsLoginPayload | Drone | createDronePayload | updateDronePayload | deleteDronePayload | DroneConnection | DroneAggregator | DroneAggregatorSum | DroneAggregatorAvg | DroneAggregatorMin | DroneAggregatorMax | DroneGroupBy | DroneConnectionName | DroneConnectionDescription | DroneConnectionFrame | DroneConnectionBrand | DroneConnectionWeigth_grams | DroneConnection_id | DroneConnectionId | DroneConnectionCreatedAt | DroneConnectionUpdatedAt | Motor | createMotorPayload | updateMotorPayload | deleteMotorPayload | MotorConnection | MotorAggregator | MotorGroupBy | MotorConnectionBrand | MotorConnectionModel | MotorConnectionSize | MotorConnectionDescription | MotorConnection_id | MotorConnectionId | MotorConnectionCreatedAt | MotorConnectionUpdatedAt | Video | createVideoPayload | updateVideoPayload | deleteVideoPayload | VideoConnection | VideoAggregator | VideoGroupBy | VideoConnectionDescription | VideoConnectionUrl | VideoConnectionLocation | VideoConnection_id | VideoConnectionId | VideoConnectionCreatedAt | VideoConnectionUpdatedAt | UploadFile | UploadFileConnection | UploadFileAggregator | UploadFileGroupBy | UploadFileConnectionName | UploadFileConnectionHash | UploadFileConnectionSha256 | UploadFileConnectionExt | UploadFileConnectionMime | UploadFileConnectionSize | UploadFileConnectionUrl | UploadFileConnectionProvider | UploadFileConnectionProvider_metadata | UploadFileConnection_id | UploadFileConnectionId | UploadFileConnectionCreatedAt | UploadFileConnectionUpdatedAt | UsersPermissionsPermission | UsersPermissionsRole | createRolePayload | updateRolePayload | deleteRolePayload | UsersPermissionsRoleConnection | UsersPermissionsRoleAggregator | UsersPermissionsRoleGroupBy | UsersPermissionsRoleConnectionName | UsersPermissionsRoleConnectionDescription | UsersPermissionsRoleConnectionType | UsersPermissionsRoleConnection_id | UsersPermissionsRoleConnectionId | UsersPermissionsRoleConnectionCreatedAt | UsersPermissionsRoleConnectionUpdatedAt | UsersPermissionsUser | createUserPayload | updateUserPayload | deleteUserPayload | UsersPermissionsUserConnection | UsersPermissionsUserAggregator | UsersPermissionsUserGroupBy | UsersPermissionsUserConnectionUsername | UsersPermissionsUserConnectionEmail | UsersPermissionsUserConnectionProvider | UsersPermissionsUserConnectionConfirmed | UsersPermissionsUserConnectionBlocked | UsersPermissionsUserConnectionRole | UsersPermissionsUserConnection_id | UsersPermissionsUserConnectionId | UsersPermissionsUserConnectionCreatedAt | UsersPermissionsUserConnectionUpdatedAt
 
 type Motor {
   brand: String!
@@ -773,6 +806,7 @@ type Video {
   url: String
   location: String
   videos(sort: String, limit: Int, start: Int, where: JSON): [UploadFile]
+  drone(sort: String, limit: Int, start: Int, where: JSON): [Drone]
   _id: ID!
   id: ID!
   createdAt: DateTime!
@@ -840,4 +874,5 @@ input VideoInput {
   videos: [ID]
   url: String
   location: String
+  drone: [ID]
 }
