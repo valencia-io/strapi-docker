@@ -55,8 +55,11 @@ Authorization: {{authorization}}
 X-REQUEST-TYPE: GraphQL
 
 query {
-    drones {
+    drones (where:{
+        weigth_grams_lt: 100
+    }) {
         id
+        weigth_grams
         description
         name
     }
@@ -73,12 +76,7 @@ query ($name: String!, $description: String!) {
   createDrone(data: {
 
   }) {
-    name
+    name,
     description
   }
-}
-
-{
-    "name": "vscode-restclient",
-    "description": "Huachao"
 }
